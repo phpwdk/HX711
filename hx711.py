@@ -23,7 +23,6 @@ class HX711:
 
         self.GAIN = 0
 
-        # 2KG的砝码（2kg=2000），-882000 ÷ 2000 = -441
         self.REFERENCE_UNIT = 1
         self.REFERENCE_UNIT_B = 1
 
@@ -210,7 +209,7 @@ class HX711:
         return self.read_median(times) - self.get_offset_A()
 
     def get_value_B(self, times=3):
-        # for channel B, we need to set_gain(32)
+        # 对于通道 B，我们需要 set_gain(32)
         g = self.get_gain()
         self.set_gain(32)
         value = self.read_median(times) - self.get_offset_B()
@@ -309,17 +308,17 @@ class HX711:
         self.set_reference_unit_A(reference_unit)
 
     def set_reference_unit_A(self, reference_unit):
-        # Make sure we aren't asked to use an invalid reference unit.
+        # 确保我们没有被要求使用无效的参考单位。
         if reference_unit == 0:
-            raise ValueError("HX711::set_reference_unit_A() can't accept 0 as a reference unit!")
+            raise ValueError("HX711::set_reference_unit_A() 不能接受 0 作为参考单位！")
             return
 
         self.REFERENCE_UNIT = reference_unit
 
     def set_reference_unit_B(self, reference_unit):
-        # Make sure we aren't asked to use an invalid reference unit.
+        # 确保我们没有被要求使用无效的参考单位。
         if reference_unit == 0:
-            raise ValueError("HX711::set_reference_unit_A() can't accept 0 as a reference unit!")
+            raise ValueError("HX711::set_reference_unit_A() 不能接受 0 作为参考单位！")
             return
 
         self.REFERENCE_UNIT_B = reference_unit

@@ -25,15 +25,16 @@ def cleanAndExit():
     sys.exit()
 
 
-# 初始化GPIO端口
+# 初始化GPIO口,树莓派IO5数据口,IO6时钟口
 hx = HX711(5, 6)
 hx.set_reading_format("MSB", "MSB")
+# 去皮设置,2KG的砝码（2kg=2000），-882000 ÷ 2000 = -441
 hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("已去皮,现在可以使用秤")
 
-# 要使用两个通道，您需要将它们都去皮
+# HX711有两个通道,但一般都是A通道
 # hx.tare_A()
 # hx.tare_B()
 
