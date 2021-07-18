@@ -14,3 +14,26 @@
 
 ##HX711英文文档
 >https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
+
+----
+
+##排针需要焊上去，所以又买了电烙铁。现在开始
+````
+组装配件（卖家有教程），故不再赘述 
+走线 HX711共有6个连接，但是我们只用其中4个
+黑色：E- 
+绿色：A- 
+白色：A + 
+红色：E + 
+````
+
+##HX711接树莓派
+````
+VCC至Raspberry Pi Pin 2（5V） 
+GND至Raspberry Pi引脚6（GND） 
+DT至Raspberry Pi Pin 29（GPIO 5） 
+SCK至Raspberry Pi引脚31（GPIO 6）
+```` 
+
+##树莓派接线图
+![树莓派节选图](https://pic4.zhimg.com/80/v2-e04f0b941f3987676597d4d2b1792cff_720w.jpg)
