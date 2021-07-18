@@ -158,11 +158,11 @@ class HX711:
         if times == 1:
             return self.read_long()
 
-        # 如果我们对少量值进行平均，只需取中位数.
+        # 如果对少量值进行平均，只需取中间数.
         if times < 5:
             return self.read_median(times)
 
-        # 如果我们要采集大量样本，我们会将它们收集在一个列表中，删除离群值，然后取剩余集合的平均值
+        # 如果采集大量样本，将它们收集在一个列表中，删除无效值，然后取剩余集合的平均值
         valueList = []
 
         for x in range(times):
@@ -221,11 +221,13 @@ class HX711:
     def get_weight(self, times=3):
         return self.get_weight_A(times)
 
+    # 读取A通道
     def get_weight_A(self, times=3):
         value = self.get_value_A(times)
         value = value / self.REFERENCE_UNIT
         return value
 
+    # 读取B通道
     def get_weight_B(self, times=3):
         value = self.get_value_B(times)
         value = value / self.REFERENCE_UNIT_B
@@ -241,11 +243,11 @@ class HX711:
         value = self.read_average(times)
 
         if self.DEBUG_PRINTING:
-            print("Tare A value:", value)
+            print("皮重 A 值:", value)
 
         self.set_offset_A(value)
 
-        # Restore the reference unit, now that we've got our offset.
+        # 恢复初始单位，已经获得了偏移重量
         self.set_reference_unit_A(backupReferenceUnit)
 
         return value
@@ -325,7 +327,7 @@ class HX711:
         self.REFERENCE_UNIT_B = reference_unit
 
     def get_reference_unit(self):
-        return get_reference_unit_A()
+        return self.get_reference_unit_A()
 
     def get_reference_unit_A(self):
         return self.REFERENCE_UNIT

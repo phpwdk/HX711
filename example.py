@@ -4,8 +4,7 @@ import time
 import sys
 import RPi.GPIO as GPIO
 from hx711 import HX711
-
-EMULATE_HX711 = False
+# 去皮重量
 referenceUnit = 1
 
 
@@ -26,8 +25,8 @@ hx.set_reading_format("MSB", "MSB")
 # 去皮设置,2KG的砝码（2kg=2000），-882000 ÷ 2000 = -441
 hx.set_reference_unit(referenceUnit)
 hx.reset()
-hx.tare()
-print("已去皮,现在可以使用秤")
+tare = hx.tare()
+print("皮重: %s" % tare)
 
 # HX711有两个通道,但一般都是A通道
 # hx.tare_A()
@@ -37,7 +36,8 @@ while True:
     try:
         # 打印重量
         val = hx.get_weight(5)
-        print(val)
+        # val = max(0, int(hx.get_weight(5)))
+        print("重量: " % val)
 
         # 从两个通道获取重量（如果您连接了称重传感器）
         # val_A = hx.get_weight_A(5)
