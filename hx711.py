@@ -105,6 +105,7 @@ class HX711:
             pass
 
         # 从 HX711 读取三个字节的数据
+        # 3个时钟决定下次采样的通道和增益
         firstByte = self.readNextByte()
         secondByte = self.readNextByte()
         thirdByte = self.readNextByte()
@@ -151,7 +152,7 @@ class HX711:
     def read_average(self, times=3):
         # 抽取合理数量的样本
         if times <= 0:
-            raise ValueError("HX711()::read_average(): times must >= 1!!")
+            raise ValueError("HX711()::read_average(): 时间必须 >= 1!")
 
         # 如果我们只对一个值求平均值，只需读取它并返回它
         if times == 1:
@@ -169,7 +170,7 @@ class HX711:
 
         valueList.sort()
 
-        # 我们将从收集的顶部和底部修剪 20% 的离群样本
+        # 我们将从收集的顶部和底部修剪 20% 的离线样本
         trimAmount = int(len(valueList) * 0.2)
 
         # 修剪边缘情况值

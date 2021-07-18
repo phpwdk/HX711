@@ -2,16 +2,11 @@
 
 import time
 import sys
+import RPi.GPIO as GPIO
+from hx711 import HX711
 
 EMULATE_HX711 = False
-
 referenceUnit = 1
-
-if not EMULATE_HX711:
-    import RPi.GPIO as GPIO
-    from hx711 import HX711
-else:
-    from emulated_hx711 import HX711
 
 
 def cleanAndExit():
@@ -25,7 +20,7 @@ def cleanAndExit():
     sys.exit()
 
 
-# 初始化GPIO口,树莓派IO5数据口,IO6时钟口
+# 初始化GPIO口,树莓派IO5数据口(DOUT),IO6时钟口(PD_SCK)
 hx = HX711(5, 6)
 hx.set_reading_format("MSB", "MSB")
 # 去皮设置,2KG的砝码（2kg=2000），-882000 ÷ 2000 = -441
