@@ -14,8 +14,6 @@ def main():
     hx.reset()
     tare = hx.tare()
     print("皮重: %s" % tare)
-    if (False == response):
-        sys.exit()
     # 循环读取数值
     while 1:
         try:
@@ -26,6 +24,8 @@ def main():
             api_url_path = "https://disc.wkh01.top/device/weigh/v1"
             url = "%s?serial=%s&weight=%d" % (api_url_path, common.serial(), val)
             response = common.get(url)
+            if not response:
+                raise ValueError("访问网络失败")
             print(response.info)
             hx.power_down()
             hx.power_up()
