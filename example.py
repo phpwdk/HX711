@@ -1,20 +1,17 @@
 #! /usr/bin/python3
 
-import time
-import sys
+import time, sys
 import RPi.GPIO as GPIO
 from hx711 import HX711
+
 # 去皮重量
 referenceUnit = 1
 
 
 def cleanAndExit():
     print("Cleaning...")
-
-    if not EMULATE_HX711:
-        # 关闭IO口
-        GPIO.cleanup()
-
+    # 关闭IO口
+    GPIO.cleanup()
     print("Bye!")
     sys.exit()
 
