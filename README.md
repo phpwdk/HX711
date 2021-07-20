@@ -1,4 +1,5 @@
 # HX711与树莓派通信实现电子秤功能
+> 本代码只能在树莓派内测试
 ----
 ##python2
 > pip install numpy
