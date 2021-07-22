@@ -1,11 +1,9 @@
-#! /usr/bin/python3
-
 import time, sys
 import RPi.GPIO as GPIO
 from hx711 import HX711
 
 # 去皮重量
-referenceUnit = 1
+referenceUnit = -7.1352
 
 
 def cleanAndExit():
@@ -34,7 +32,7 @@ while True:
         # 打印重量
         val = hx.get_weight(5)
         # val = max(0, int(hx.get_weight(5)))
-        print("重量: " % val)
+        print("重量: %s" % val)
 
         # 从两个通道获取重量（如果您连接了称重传感器）
         # val_A = hx.get_weight_A(5)
