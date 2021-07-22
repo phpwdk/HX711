@@ -1,12 +1,12 @@
 #!/bin/bash
-# /etc/init.d/hx711
+# /etc/init.d/start_hx711
 
 ### BEGIN INIT INFO
-# sudo chmod +x /etc/init.d/hx711
-# sudo service hx711 start_hx711
-# sudo service hx711 stop
+# sudo chmod +x /etc/init.d/start_hx711
+# sudo service start_hx711 start_hx711
+# sudo service start_hx711 stop
 # 设置开机启动
-# sudo update-rc.d hx711 defaults
+# sudo update-rc.d start_hx711 defaults
 ### END INIT INFO
 
 case "$1" in
