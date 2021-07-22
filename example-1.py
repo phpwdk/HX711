@@ -5,8 +5,8 @@ import time
 
 class Hx711():
     def setup(self):
-        self.SCK = 6  # 物理引脚第6号，时钟
-        self.DT = 5  # 物理引脚第5号，数据
+        self.SCK = 31  # 物理引脚第31号，时钟
+        self.DT = 29  # 物理引脚第29号，数据
         self.flag = 1  # 用于首次读数校准
         self.initweight = 0  # 毛皮
         self.weight = 0  # 测重
@@ -37,7 +37,7 @@ class Hx711():
                 value += 1
         GPIO.output(self.SCK, 1)
         GPIO.output(self.SCK, 0)
-        # value = int(value / 1905)  # 1905为我传感器的特性值，不同传感器值不同。可先注释此步骤，再去测一物体A得到一个值X,而后用X除以A的真实值即可确定特性值
+        value = int(value / 10.2)  # 1905为我传感器的特性值，不同传感器值不同。可先注释此步骤，再去测一物体A得到一个值X,而后用X除以A的真实值即可确定特性值
         if self.flag == 1:  # 第一次读数为毛皮
             self.flag = 0
             self.initweight = value  # 初始值
