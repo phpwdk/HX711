@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 from hx711 import HX711
 
 # 去皮重量
-referenceUnit = 10.9
+referenceUnit = 0.95
 
 
 def cleanAndExit():
