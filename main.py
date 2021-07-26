@@ -6,7 +6,7 @@ from common import COMMON
 
 # 去皮重量
 referenceUnit = 9.497
-switch = '0'
+switch = 0
 pd_sck = 6
 dout = 5
 
@@ -31,26 +31,34 @@ def main():
         print("访问网络失败")
     print(response)
     is_switch = response['data']['switch']
+    peeled = response['data']['peeled']
     # 循环读取数值
     while 1:
         try:
-            # 断电休眠
-            if is_switch == '0':
-                weight = 0
-                if not GPIO.input(pd_sck):
-                    GPIO.output(pd_sck, 1)
+            weight = 0
+            # 去皮
+            if peeled == 1:
+                hx.reset()
+                hx.tare()
             else:
-                hx.power_down()
-                hx.power_up()
-                # 采集15次数据样本,取平均值
-                weight = calculated_weight(hx.get_weight(5))
-                print("weight: %d" % weight)
+                # 断电休眠
+                if is_switch == 0:
+                    if GPIO.input(pd_sck) == 0:
+                        print('断电')
+                        GPIO.output(pd_sck, True)
+                else:
+                    hx.power_down()
+                    hx.power_up()
+                    # 采集15次数据样本,取平均值
+                    weight = calculated_weight(hx.get_weight(5))
+                    print("weight: %d" % weight)
             # 上报设备数据
             api_url_path = "https://disc.wkh01.top/device/weigh/v1"
             url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), weight)
             response = com.get(url)
             if response:
                 is_switch = response['data']['switch']
+                peeled = response['data']['peeled']
             time.sleep(3)
 
         except (KeyboardInterrupt, SystemExit):
