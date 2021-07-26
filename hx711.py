@@ -233,9 +233,11 @@ class HX711:
         value = value / self.REFERENCE_UNIT_B
         return value
 
+    # 读取通道
     def tare(self, times=15):
         return self.tare_A(times)
 
+    # 通道A
     def tare_A(self, times=15):
         backupReferenceUnit = self.get_reference_unit_A()
         self.set_reference_unit_A(1)
