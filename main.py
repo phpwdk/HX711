@@ -48,8 +48,7 @@ def main():
             response = com.get(url)
             if response:
                 is_switch = response['data']['switch']
-            # 延时1秒
-            time.sleep(1)
+            time.sleep(3)
 
         except (KeyboardInterrupt, SystemExit):
             cleanAndExit()
