@@ -42,7 +42,7 @@ def main():
                 hx.tare()
             else:
                 # 断电休眠
-                if is_switch == 0:
+                if is_switch == 1:
                     if GPIO.input(pd_sck) == 0:
                         print('断电')
                         GPIO.output(pd_sck, True)
