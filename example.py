@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 from hx711 import HX711
 
 # 去皮重量
-referenceUnit = 0.95
+referenceUnit = 9.497
 
 
 def cleanAndExit():
@@ -21,7 +21,7 @@ hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(referenceUnit)
 hx.reset()
 tare = hx.tare()
-print("皮重: %s" % tare)
+print("default: %s" % tare)
 
 # HX711有两个通道,但一般都是A通道
 # hx.tare_A()
@@ -30,9 +30,9 @@ print("皮重: %s" % tare)
 while True:
     try:
         # 打印重量
-        val = hx.get_weight(5)
-        # val = max(0, int(hx.get_weight(5)))
-        print("重量: %s" % val)
+        # val = hx.get_weight(5)
+        val = max(0, int(hx.get_weight(5)))
+        print("weight: %s" % val)
 
         # 从两个通道获取重量（如果您连接了称重传感器）
         # val_A = hx.get_weight_A(5)

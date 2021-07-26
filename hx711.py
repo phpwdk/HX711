@@ -243,7 +243,7 @@ class HX711:
         value = self.read_average(times)
 
         if self.DEBUG_PRINTING:
-            print("皮重 A 值:", value)
+            print("Tare A value:", value)
 
         self.set_offset_A(value)
 
@@ -253,7 +253,6 @@ class HX711:
         return value
 
     def tare_B(self, times=15):
-        # Backup REFERENCE_UNIT value
         backupReferenceUnit = self.get_reference_unit_B()
         self.set_reference_unit_B(1)
 
@@ -351,11 +350,11 @@ class HX711:
         self.readLock.acquire()
         # 时钟输出下降沿
         GPIO.output(self.PD_SCK, False)
-        # 停留100微妙,设备重启
+        # 停留100微妙,设备重新采集
         time.sleep(0.0001)
         # 解锁
         self.readLock.release()
-        # 增益通道不是128时丢弃
+        # 增益通道不是128时获取数据
         if self.get_gain() != 128:
             self.readRawBytes()
 

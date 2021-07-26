@@ -5,24 +5,31 @@ from hx711 import HX711
 from common import common
 
 
+# 计算重量
+def calculated_weight(weight):
+    return weight
+
+
 def main():
+    # 去皮重量
+    referenceUnit = 9.497
     # 初始化秤
     hx = HX711(5, 6)
     hx.set_reading_format("MSB", "MSB")
-    # 去皮设置,2KG的砝码（2kg=2000），-882000 ÷ 2000 = -441
-    hx.set_reference_unit(1)
+    hx.set_reference_unit(referenceUnit)
     hx.reset()
-    tare = hx.tare()
-    print("皮重: %s" % tare)
+    hx.tare()
     # 循环读取数值
     while 1:
         try:
             # 打印重量
-            val = max(0, int(hx.get_weight(5)))
-            print("重量: " % val)
-            # 通知服务器
+            # val = max(0, int(hx.get_weight(5)))
+            # weight = calculated_weight(val)
+            weight = hx.read_average()
+            print("重量: " % weight)
+            # 通知服务器设备启动
             api_url_path = "https://disc.wkh01.top/device/weigh/v1"
-            url = "%s?serial=%s&weight=%d" % (api_url_path, common.serial(), val)
+            url = "%s?serial=%s&weight=%d" % (api_url_path, common.serial(), weight)
             response = common.get(url)
             if not response:
                 raise ValueError("访问网络失败")
@@ -41,6 +48,7 @@ def cleanAndExit():
     GPIO.cleanup()
     print("Bye!")
     sys.exit()
+
 
 if __name__ == '__main__':
     main()
