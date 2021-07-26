@@ -7,6 +7,8 @@ from common import COMMON
 # 去皮重量
 referenceUnit = 9.497
 switch = '0'
+pd_sck = 6
+dout = 5
 
 
 def calculated_weight(weight):
@@ -16,7 +18,7 @@ def calculated_weight(weight):
 def main():
     com = COMMON()
     # 初始化秤
-    hx = HX711(5, 6)
+    hx = HX711(dout, pd_sck)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
@@ -35,7 +37,8 @@ def main():
             # 断电休眠
             if is_switch == '0':
                 weight = 0
-                GPIO.output(6, 1)
+                if not GPIO.input(pd_sck):
+                    GPIO.output(pd_sck, 1)
             else:
                 hx.power_down()
                 hx.power_up()
