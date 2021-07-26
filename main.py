@@ -1,15 +1,20 @@
 #! /usr/bin/python3
-import time, sys, json
+import time, sys, math
 import RPi.GPIO as GPIO
 from hx711 import HX711
-from common import common
+from common import COMMON
 
 # 去皮重量
 referenceUnit = 9.497
 switch = '0'
 
 
+def calculated_weight(weight):
+    return max(0, round(int(weight) / 100) * 10)
+
+
 def main():
+    com = COMMON()
     # 初始化秤
     hx = HX711(5, 6)
     hx.set_reading_format("MSB", "MSB")
@@ -18,8 +23,8 @@ def main():
     hx.tare()
     # 通知服务器设备启动
     api_url_path = "https://disc.wkh01.top/device/weigh/v1"
-    url = "%s?serial=%s&weight=%d" % (api_url_path, common.serial(), 0)
-    response = common.get(url)
+    url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), 0)
+    response = com.get(url)
     if not response:
         print("访问网络失败")
     print(response)
@@ -27,24 +32,24 @@ def main():
     # 循环读取数值
     while 1:
         try:
-            # 打印重量
-            # val = max(0, int(hx.get_weight(5)))
-            # weight = calculated_weight(val)
-            # print("重量: " % weight)
             # 断电休眠
             if is_switch == '0':
-                hx.power_down()
+                weight = 0
+                GPIO.output(6, 1)
             else:
                 hx.power_down()
                 hx.power_up()
-                # 重新启动忽略前4次采集
-                for x in range(4):
-                    hx.read_long()
                 # 采集15次数据样本,取平均值
-                weight = hx.read_average()
-                print("重量: " % weight)
-            # 延时100毫秒
-            time.sleep(0.1)
+                weight = calculated_weight(hx.get_weight(5))
+                print("weight: %d" % weight)
+            # 上报设备数据
+            api_url_path = "https://disc.wkh01.top/device/weigh/v1"
+            url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), weight)
+            response = com.get(url)
+            if response:
+                is_switch = response['data']['switch']
+            # 延时1秒
+            time.sleep(1)
 
         except (KeyboardInterrupt, SystemExit):
             cleanAndExit()

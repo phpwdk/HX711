@@ -2,7 +2,7 @@ from urllib import request
 import json, uuid, os
 
 
-class common:
+class COMMON:
 
     def get(self, api_url):
         print(api_url)
