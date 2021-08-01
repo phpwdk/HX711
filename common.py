@@ -50,7 +50,7 @@ class COMMON:
         outfile = "%s/%s" % (file_path, file_name)
         if not os.path.isfile(outfile):
             request.urlretrieve(url, outfile)
-        print(outfile)
+        # print(outfile)
         return outfile
 
     def log(self, info):

@@ -10,7 +10,7 @@ switch = 0
 pd_sck = 6
 dout = 5
 
-
+# 重量格式化
 def calculated_weight(weight):
     return max(0, round(int(weight) / 100) * 10)
 
@@ -25,12 +25,14 @@ def main():
     hx.reset()
     hx.tare()
     # 通知服务器设备启动
-    api_url_path = "https://disc.wkh01.top/device/weigh/v1"
-    url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), 0)
-    response = com.get(url)
-    if not response:
-        print("访问网络失败")
-    # print(response)
+    while 1:
+        api_url_path = "https://disc.wkh01.top/device/weigh/v1"
+        url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), 0)
+        response = com.get(url)
+        if not response:
+            time.sleep(5)
+        else:
+            break
     is_switch = response['data']['switch']
     peeled = response['data']['peeled']
     old_weight = 0
@@ -48,28 +50,26 @@ def main():
                 # 断电休眠
                 if is_switch == 1:
                     if GPIO.input(pd_sck) == 0:
-                        print('断电')
+                        # print('断电')
                         GPIO.output(pd_sck, True)
                 else:
                     hx.power_down()
                     hx.power_up()
                     # 采集15次数据样本,取平均值
                     weight = calculated_weight(hx.get_weight(5))
-                    print("weight: %d" % weight)
-            # 上报设备数据
-            api_url_path = "https://disc.wkh01.top/device/weigh/v1"
-            url = "%s?serial=%s&weight=%d&peeled=%d" % (api_url_path, com.serial(), weight, p)
-            response = com.get(url)
-            if response:
-                is_switch = response['data']['switch']
-                peeled = response['data']['peeled']
+                    # print("weight: %d" % weight)
             if old_weight != weight:
-                stop_time = 0.1
                 old_weight = weight
-            else:
-                stop_time = 3
-            time.sleep(stop_time)
-
+                # 上报设备数据
+                api_url_path = "https://disc.wkh01.top/device/weigh/v1"
+                url = "%s?serial=%s&weight=%d&peeled=%d" % (api_url_path, com.serial(), weight, p)
+                response = com.get(url)
+                if response:
+                    is_switch = response['data']['switch']
+                    peeled = response['data']['peeled']
+                time.sleep(0.5)
+        except Exception as err:
+            com.log("error: {0}".format(err))
         except (KeyboardInterrupt, SystemExit):
             cleanAndExit()
 
@@ -77,7 +77,7 @@ def main():
 def cleanAndExit():
     # 关闭IO口
     GPIO.cleanup()
-    print("Bye!")
+    # print("Bye!")
     sys.exit()
 
 
