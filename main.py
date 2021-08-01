@@ -18,7 +18,6 @@ def calculated_weight(weight):
 def main():
     com = COMMON()
     # 初始化秤
-    GPIO.cleanup()
     hx = HX711(dout, pd_sck)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
@@ -55,10 +54,10 @@ def main():
                 else:
                     hx.power_down()
                     hx.power_up()
-                    # 采集15次数据样本,取平均值
+                    # 采集5次数据样本,取平均值
                     weight = calculated_weight(hx.get_weight(5))
                     # print("weight: %d" % weight)
-            if old_weight != weight:
+            if peeled or old_weight != weight:
                 old_weight = weight
                 # 上报设备数据
                 api_url_path = "https://disc.wkh01.top/device/weigh/v1"
