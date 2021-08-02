@@ -25,13 +25,16 @@ def main():
     hx.tare()
     # 通知服务器设备启动
     while 1:
-        api_url_path = "https://disc.wkh01.top/device/weigh/v1"
-        url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), 0)
-        response = com.get(url)
-        if not response:
-            time.sleep(5)
-        else:
-            break
+        try:
+            api_url_path = "https://disc.wkh01.top/device/weigh/v1"
+            url = "%s?serial=%s&weight=%d" % (api_url_path, com.serial(), 0)
+            response = com.get(url)
+            if not response:
+                time.sleep(5)
+            else:
+                break
+        except (KeyboardInterrupt, SystemExit):
+            cleanAndExit()
     is_switch = response['data']['switch']
     peeled = response['data']['peeled']
     old_weight = 0
@@ -69,6 +72,7 @@ def main():
                 time.sleep(0.5)
         except Exception as err:
             com.log("error: {0}".format(err))
+            cleanAndExit()
         except (KeyboardInterrupt, SystemExit):
             cleanAndExit()
 
